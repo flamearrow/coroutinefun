@@ -50,7 +50,7 @@ class TitleDaoFake(var titleToReturn: String) : TitleDao {
     }
 
     /**
-     * Assertion that the next element inserted has a title of expected
+     * Assertion that the next element inserted has a TITLE of expected
      *
      * If the element was previously inserted and is currently the most recent element
      * this assertion will also match. This allows tests to avoid synchronizing calls to insert
@@ -91,7 +91,7 @@ class TitleDaoFake(var titleToReturn: String) : TitleDao {
 /**
  * Testing Fake implementation of MainNetwork
  */
-class MainNetworkFake(var call: FakeNetworkCall<String> = makeSuccessCall("title")) : MainNetwork {
+class MainNetworkFake(var call: FakeNetworkCall<String> = makeSuccessCall("TITLE")) : MainNetwork {
     override fun fetchNewWelcome(): FakeNetworkCall<String> {
         return call
     }

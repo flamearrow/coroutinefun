@@ -18,13 +18,14 @@ package com.example.android.kotlincoroutines.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import com.example.android.kotlincoroutines.main.TitleRepository.RefreshState.Success
-import com.example.android.kotlincoroutines.main.TitleRepository.RefreshState.Error
-import com.example.android.kotlincoroutines.main.TitleRepository.RefreshState.Loading
-import com.example.android.kotlincoroutines.util.BACKGROUND
-import com.example.android.kotlincoroutines.util.FakeNetworkError
-import com.example.android.kotlincoroutines.util.FakeNetworkSuccess
+import com.example.android.kotlincoroutines.main.TitleRepository.RefreshState.*
+import com.example.android.kotlincoroutines.util.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlin.LazyThreadSafetyMode.NONE
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * TitleRepository provides an interface to fetch a title or request a new one be generated.
@@ -80,6 +81,23 @@ class TitleRepository(private val network: MainNetwork, private val titleDao: Ti
         }
     }
 
+    suspend fun refreshTitleCoroutine() {
+//        onStateChanged(Loading)
+
+        withContext(Dispatchers.IO) {
+            try {
+                // takes time
+                val result = network.fetchNewWelcome().await()
+                // if it returns, then it returns data
+                titleDao.insertTitle(Title(result))
+            } catch (error: FakeNetworkException) {
+                // println
+                throw TitleRefreshError(error)
+            }
+        }
+
+    }
+
     /**
      * Class that represents the state of a refresh request.
      *
@@ -133,3 +151,14 @@ class TitleRefreshError(cause: Throwable) : Throwable(cause.message, cause)
  * @throws Throwable original exception from library if network request fails
  */
 // TODO: Implement FakeNetworkCall<T>.await() here
+suspend fun <T> FakeNetworkCall<T>.await(): T {
+    return suspendCoroutine { continuation ->
+        addOnResultListener { result ->
+            when (result) {
+                is FakeNetworkSuccess<T> -> continuation.resume(result.data)
+                is FakeNetworkError -> continuation.resumeWithException(result.error)
+            }
+        }
+    }
+}
+

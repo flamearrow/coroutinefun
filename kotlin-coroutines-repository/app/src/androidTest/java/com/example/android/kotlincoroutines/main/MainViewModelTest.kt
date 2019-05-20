@@ -27,11 +27,11 @@ class MainViewModelTest {
         val subject = MainViewModel(
                 TitleRepository(
                         MainNetworkFake(makeSuccessCall("OK")),
-                        TitleDaoFake("title")
+                        TitleDaoFake("TITLE")
                 )
         )
 
-        assertThat(subject.title.getValueForTest()).isEqualTo("title")
+        assertThat(subject.title.getValueForTest()).isEqualTo("TITLE")
     }
 
     @Test
@@ -41,7 +41,7 @@ class MainViewModelTest {
         val subject = MainViewModel(
                 TitleRepository(
                         MainNetworkFake(call),
-                        TitleDaoFake("title")
+                        TitleDaoFake("TITLE")
                 )
         )
 
@@ -61,7 +61,7 @@ class MainViewModelTest {
         val subject = MainViewModel(
                 TitleRepository(
                         MainNetworkFake(call),
-                        TitleDaoFake("title")
+                        TitleDaoFake("TITLE")
                 )
         )
 
@@ -82,7 +82,7 @@ class MainViewModelTest {
         val subject = MainViewModel(
                 TitleRepository(
                         MainNetworkFake(call),
-                        TitleDaoFake("title")
+                        TitleDaoFake("TITLE")
                 )
         )
 
@@ -99,7 +99,7 @@ class MainViewModelTest {
 
     @Test
     fun whenMainViewClicked_titleIsRefreshed() {
-        val titleDao = TitleDaoFake("title")
+        val titleDao = TitleDaoFake("TITLE")
         val subject = MainViewModel(
                 TitleRepository(
                         MainNetworkFake(makeSuccessCall("OK")),

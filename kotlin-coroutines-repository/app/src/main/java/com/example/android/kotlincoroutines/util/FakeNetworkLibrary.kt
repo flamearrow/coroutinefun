@@ -168,6 +168,8 @@ class FakeNetworkSuccess<T>(val data: T) : FakeNetworkResult<T>()
  */
 class FakeNetworkError<T>(val error: Throwable) : FakeNetworkResult<T>()
 
+class Ml<T> : FakeNetworkResult<T>()
+
 /**
  * Listener "type" for observing a [FakeNetworkCall]
  */
