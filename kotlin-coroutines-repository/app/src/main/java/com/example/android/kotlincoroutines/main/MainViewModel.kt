@@ -114,12 +114,8 @@ class MainViewModel(private val repository: TitleRepository) : ViewModel() {
 //            }
 //        }
 
-        viewModelScope.launch {
-            // with coroutine we can directly set live data values as now the method
-            // is "linear" with natural flow control
-            launchDataLoad {
-                repository.refreshTitleCoroutine()
-            }
+        launchDataLoad {
+            repository.refreshTitleCoroutine()
         }
     }
 
@@ -135,6 +131,8 @@ class MainViewModel(private val repository: TitleRepository) : ViewModel() {
      *              spinner will stop
      */
     fun launchDataLoad(block: suspend () -> Unit): Job {
+        // with coroutine we can directly set live data values as now the method
+        // is "linear" with natural flow control
         return viewModelScope.launch {
             // with coroutine we can directly set live data values as now the method
             // is "linear" with natural flow control

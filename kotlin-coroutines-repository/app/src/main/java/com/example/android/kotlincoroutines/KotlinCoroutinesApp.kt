@@ -22,7 +22,7 @@ import androidx.work.ExistingPeriodicWorkPolicy.KEEP
 import androidx.work.NetworkType.UNMETERED
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
-import com.example.android.kotlincoroutines.main.RefreshMainDataWork
+import com.example.android.kotlincoroutines.main.CoroutineRefreshMainDataWork
 import java.util.concurrent.TimeUnit
 
 /**
@@ -47,19 +47,19 @@ class KotlinCoroutinesApp : Application() {
         // Use constraints to require the work only run when the device is charging and the
         // network is unmetered
         val constraints = Constraints.Builder()
-            .setRequiresCharging(true)
-            .setRequiredNetworkType(UNMETERED)
-            .build()
+                .setRequiresCharging(true)
+                .setRequiredNetworkType(UNMETERED)
+                .build()
 
         // Specify that the work should attempt to run every day
         val work = PeriodicWorkRequest
-            .Builder(RefreshMainDataWork::class.java, 1, TimeUnit.DAYS)
-            .setConstraints(constraints)
-            .build()
+                .Builder(CoroutineRefreshMainDataWork::class.java, 1, TimeUnit.DAYS)
+                .setConstraints(constraints)
+                .build()
 
         // Enqueue it work WorkManager, keeping any previously scheduled jobs for the same
         // work.
-        WorkManager.getInstance()
-            .enqueueUniquePeriodicWork(RefreshMainDataWork::class.java.name, KEEP, work)
+        WorkManager.getInstance(applicationContext)
+                .enqueueUniquePeriodicWork(CoroutineRefreshMainDataWork::class.java.name, KEEP, work)
     }
 }
